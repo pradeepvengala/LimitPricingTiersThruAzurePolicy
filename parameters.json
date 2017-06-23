@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "Automation_Account_Name": {
+      "value": "AzurePolicyAutomation"
+    },
+    "Email_From_Address": {
+      "value": "xxx@microsoft.com"
+    },
+    "Email_To_Address": {
+      "value": "xxx@microsoft.com"
+    },
+    "SubscriptionID": {
+      "value": ""
+    },
+    "Subscription_Name": {
+      "value": ""
+    }
+  }
+}

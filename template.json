@@ -1,0 +1,146 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "Automation_Account_Name": {
+      "defaultValue": "AzurePolicyAutomation",
+      "type": "String"
+    },
+    "Email_From_Address": {
+      "defaultValue": "xxx@microsoft.com",
+      "type": "String"
+    },
+    "Email_To_Address": {
+      "defaultValue": "xxx@microsoft.com",
+      "type": "String"
+    },
+    "SubscriptionID": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "Subscription_Name": {
+      "defaultValue": "",
+      "type": "String"
+    }
+  },
+  "variables": {
+    "scriptUri1": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/EnableAzurePolicy.ps1",
+    "scriptUri2": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/DisableAzurePolicy.ps1",
+    "scriptUri3": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/DeployAzurePolicy.ps1",
+    "RunbookDisableAzurePolicy": "DisableAzurePolicy",
+    "RunbookEnableAzurePolicy": "EnableAzurePolicy",
+    "RunbookDeployAzurePolicy": "DeployAzurePolicy",
+    "PolicyName": "LimitPricingTiers"
+
+  },
+    "resources": [
+      {
+        "type": "Microsoft.Automation/automationAccounts",
+        "name": "[parameters('Automation_Account_Name')]",
+        "apiVersion": "2015-10-31",
+        "location": "southcentralus",
+        "properties": {
+          "sku": { "name": "Free" }
+        },
+        "resources": [
+          {
+            "type": "runbooks",
+            "name": "[variables('RunbookDisableAzurePolicy')]",
+            "apiVersion": "2015-10-31",
+            "location": "southcentralus",
+            "properties": {
+              "runbookType": "PowerShell",
+              "logVerbose": false,
+              "logProgress": false,
+              "publishedContentLink": {
+                "uri": "[variables('scriptUri2')]",
+                "version": "1.0.0.0"
+              }
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "runbooks",
+            "name": "[variables('RunbookEnableAzurePolicy')]",
+            "apiVersion": "2015-10-31",
+            "location": "southcentralus",
+            "properties": {
+              "runbookType": "PowerShell",
+              "logVerbose": false,
+              "logProgress": false,
+              "publishedContentLink": {
+                "uri": "[variables('scriptUri1')]",
+                "version": "1.0.0.0"
+              }
+
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "runbooks",
+            "name": "[variables('RunbookDeployAzurePolicy')]",
+            "apiVersion": "2015-10-31",
+            "location": "southcentralus",
+            "properties": {
+              "runbookType": "PowerShell",
+              "logVerbose": false,
+              "logProgress": false,
+              "publishedContentLink": {
+                "uri": "[variables('scriptUri3')]",
+                "version": "1.0.0.0"
+              }
+
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "variables",
+            "name": "[parameters('Email_From_Address')]",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "variables",
+            "name": "[variables('PolicyName')]",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "variables",
+            "name": "[parameters('SubscriptionID')]",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "variables",
+            "name": "[parameters('Subscription_Name')]",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          },
+          {
+            "type": "variables",
+            "name": "[parameters('Email_To_Address')]",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+            ]
+          }
+        ]
+
+          }
+        ]
+      }

@@ -33,12 +33,20 @@
     "Subscription Name": {
       "defaultValue": "",
       "type": "String"
+    },
+    "Subscription userName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "Subscription password": {
+      "defaultValue": "",
+      "type": "securestring"
     }
   },
   "variables": {
-    "scriptUri1": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/EnableAzurePolicy.ps1",
-    "scriptUri2": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/DisableAzurePolicy.ps1",
-    "scriptUri3": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/DeployAzurePolicy.ps1",
+    "scriptUri1": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/PolicyScripts/EnableAzurePolicy.ps1",
+    "scriptUri2": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/PolicyScripts/DisableAzurePolicy.ps1",
+    "scriptUri3": "https://raw.githubusercontent.com/pradeepvengala/LimitPricingTiersThruAzurePolicy/master/PolicyScripts/DeployAzurePolicy.ps1",
     "RunbookDisableAzurePolicy": "DisableAzurePolicy",
     "RunbookEnableAzurePolicy": "EnableAzurePolicy",
     "RunbookDeployAzurePolicy": "DeployAzurePolicy",
@@ -213,6 +221,18 @@
             },
             "dependsOn": [
               "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
+            ]
+          },
+          {
+            "type": "credentials",
+            "name": "AzureSubscriptionCredentials",
+            "apiVersion": "2015-10-31",
+            "properties": {
+              "userName": "[parameters('Subscription userName')]",
+              "password": "[parameters('Subscription password')]"
+            },
+            "dependsOn": [
+              "[concat('Microsoft.Automation/automationAccounts/', parameters('Automation Account Name'))]"
             ]
           }
         ]

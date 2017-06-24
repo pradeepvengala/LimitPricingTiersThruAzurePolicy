@@ -25,6 +25,12 @@
     },
     "Subscription Name": {
       "value": null
+    },
+    "Subscription userName": {
+      "value": null
+    },
+    "Subscription password": {
+      "value": null
     }
   }
 }

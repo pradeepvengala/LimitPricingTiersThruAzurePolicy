@@ -2,15 +2,15 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
-    "Automation_Account_Name": {
-      "defaultValue": "AzurePolicyAutomation",
+    "Automation Account Name": {
+      "defaultValue": "",
       "type": "String"
     },
-    "Email_From_Address": {
+    "Policy Alert Email From Address": {
       "defaultValue": "xxx@microsoft.com",
       "type": "String"
     },
-    "Email_To_Address": {
+    "Policy Alert Email To Address": {
       "defaultValue": "xxx@microsoft.com",
       "type": "String"
     },
@@ -18,7 +18,7 @@
       "defaultValue": "",
       "type": "String"
     },
-    "Subscription_Name": {
+    "Subscription Name": {
       "defaultValue": "",
       "type": "String"
     }
@@ -36,7 +36,7 @@
     "resources": [
       {
         "type": "Microsoft.Automation/automationAccounts",
-        "name": "[parameters('Automation_Account_Name')]",
+        "name": "[parameters('Automation Account Name')]",
         "apiVersion": "2015-10-31",
         "location": "southcentralus",
         "properties": {
@@ -52,13 +52,13 @@
               "runbookType": "PowerShell",
               "logVerbose": false,
               "logProgress": false,
-              "publishedContentLink": {
+              "publishContentLink": {
                 "uri": "[variables('scriptUri2')]",
                 "version": "1.0.0.0"
               }
             },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
@@ -70,14 +70,14 @@
               "runbookType": "PowerShell",
               "logVerbose": false,
               "logProgress": false,
-              "publishedContentLink": {
+              "publishContentLink": {
                 "uri": "[variables('scriptUri1')]",
                 "version": "1.0.0.0"
               }
 
             },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
@@ -89,57 +89,82 @@
               "runbookType": "PowerShell",
               "logVerbose": false,
               "logProgress": false,
-              "publishedContentLink": {
+              "publishContentLink": {
                 "uri": "[variables('scriptUri3')]",
                 "version": "1.0.0.0"
               }
 
             },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
             "type": "variables",
-            "name": "[parameters('Email_From_Address')]",
+            "name": "From",
             "apiVersion": "2015-10-31",
+            "properties": {
+              "isEncrypted": false,
+              "value": "[concat('\"',parameters('Policy Alert Email From Address'),'\"')]",
+              "description": "From"
+            },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
+              ]
+            },
+          {
+            "type": "variables",
+            "name": "PolicyName",
+            "apiVersion": "2015-10-31",
+            "properties": {
+              "isEncrypted": false,
+              "value": "[concat('\"','LimitPricingTiers','\"')]",
+              "description": "PolicyName"
+            },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
             "type": "variables",
-            "name": "[variables('PolicyName')]",
+            "name": "SubscriptionId",
             "apiVersion": "2015-10-31",
+            "properties": {
+              "isEncrypted": false,
+              "value": "[concat('\"',parameters('SubscriptionID'),'\"')]",
+              "description": "SubscriptionId"
+            },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
             "type": "variables",
-            "name": "[parameters('SubscriptionID')]",
+            "name": "SubscriptionName",
             "apiVersion": "2015-10-31",
+            "properties": {
+              "isEncrypted": false,
+              "value": "[concat('\"',parameters('Subscription Name'),'\"')]",
+              "description": "Subscription Name"
+            },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           },
           {
             "type": "variables",
-            "name": "[parameters('Subscription_Name')]",
+            "name": "To",
             "apiVersion": "2015-10-31",
+            "properties": {
+              "isEncrypted": false,
+              "value": "[concat('\"',parameters('Policy Alert Email To Address'),'\"')]",
+              "description": "To"
+            },
             "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
-            ]
-          },
-          {
-            "type": "variables",
-            "name": "[parameters('Email_To_Address')]",
-            "apiVersion": "2015-10-31",
-            "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation_Account_Name'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('Automation Account Name'))]"
             ]
           }
-        ]
+            ]
 
           }
         ]
